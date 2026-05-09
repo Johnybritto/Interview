@@ -1,0 +1,402 @@
+# Barclays Platform / SRE / DevOps Interview Question Bank
+
+For roles like:
+
+* Engineering Lead
+* VP / AVP Platform Engineering
+* Site Reliability Engineer
+* Kubernetes / OpenShift Platform Engineer
+* DevOps Engineering Lead
+* Python Automation / SRE VP
+
+Based on the Barclays-style roles we identified earlier.
+
+---
+
+# 🔥 SECTION 1 — Kubernetes / OpenShift (Very Important)
+
+## Core Kubernetes
+
+1. Explain Kubernetes architecture end-to-end.
+2. How does kube-apiserver validate requests?
+3. What happens internally when a Pod is created?
+4. Difference between Deployment vs StatefulSet?
+5. How does etcd maintain consistency?
+6. Explain Raft consensus in etcd.
+7. What happens when etcd quorum is lost?
+8. How do you recover corrupted etcd?
+9. Explain kube-scheduler flow.
+10. How does kube-proxy work?
+
+---
+
+## Networking (Very Frequently Asked)
+
+1. Explain packet flow from Ingress → Service → Pod.
+2. Difference between ClusterIP, NodePort, LoadBalancer.
+3. How does CoreDNS work?
+4. How does service discovery happen?
+5. Explain CNI plugins.
+6. Difference between Calico vs Flannel.
+7. How do Network Policies work?
+8. Troubleshoot pod-to-pod communication issue.
+9. Explain ingress controller internals.
+10. How does OpenShift SDN differ?
+
+---
+
+## OpenShift-Specific
+
+1. Difference between OpenShift and Kubernetes?
+2. What are SCCs in OpenShift?
+3. How do Operators work?
+4. Explain CRD lifecycle.
+5. How do Routes work in OpenShift?
+6. OpenShift upgrade strategy?
+7. Troubleshoot failed cluster upgrade.
+8. How does OpenShift authentication work?
+9. Explain OpenShift MachineSets.
+10. How do you secure multi-tenant clusters?
+
+---
+
+## Real Production Scenarios
+
+1. Pods are stuck in Pending state.
+2. Node becomes NotReady.
+3. Memory leak inside container.
+4. API server latency increased suddenly.
+5. Cluster DNS failures.
+6. High etcd size issue.
+7. Container CPU throttling issue.
+8. Frequent OOMKilled events.
+9. Pod restarting every few minutes.
+10. One namespace unable to communicate.
+
+---
+
+# 🔥 SECTION 2 — SRE / Production Reliability
+
+## SRE Core
+
+1. What are SLI/SLO/SLA?
+2. Explain error budget.
+3. What metrics matter most?
+4. How do you reduce alert fatigue?
+5. What is golden signal monitoring?
+6. Difference between monitoring vs observability?
+7. Explain incident management lifecycle.
+8. What should be included in RCA?
+9. How do you define reliability?
+10. Explain toil reduction.
+
+---
+
+## Incident Scenarios
+
+1. Production latency spike.
+2. Kubernetes cluster outage.
+3. API failure under load.
+4. Logging pipeline failure.
+5. Sudden memory exhaustion.
+6. High disk IO issue.
+7. Database connectivity intermittent.
+8. Cascading service failures.
+9. Large-scale node failures.
+10. Cloud region failure.
+
+---
+
+# 🔥 SECTION 3 — Platform Engineering / Engineering Lead
+
+## Platform Engineering
+
+1. What is Platform Engineering?
+2. Difference between DevOps vs Platform Engineering?
+3. What is Internal Developer Platform (IDP)?
+4. How would you design a self-service platform?
+5. How do you standardize deployments?
+6. Explain GitOps architecture.
+7. ArgoCD vs Flux.
+8. Multi-cluster management strategy?
+9. How do you manage secrets securely?
+10. How do you enforce governance?
+
+---
+
+## Leadership / VP / Engineering Lead
+
+1. How do you handle Sev1 incidents?
+2. How do you prioritize platform roadmap?
+3. How do you handle conflicting stakeholders?
+4. How do you reduce operational toil?
+5. How do you mentor engineers?
+6. How do you scale engineering teams?
+7. How do you handle underperformers?
+8. Describe major outage handled by you.
+9. How do you introduce reliability culture?
+10. How do you measure platform success?
+
+---
+
+# 🔥 SECTION 4 — Python (Very Important for Barclays)
+
+## Python Basics
+
+1. Difference between list vs tuple.
+2. What are decorators?
+3. Explain generators.
+4. What is GIL?
+5. Difference between threading vs multiprocessing.
+6. Explain *args and **kwargs.
+7. What are context managers?
+8. Mutable vs immutable objects?
+9. Deep copy vs shallow copy.
+10. Explain lambda functions.
+
+---
+
+## Python for Automation / SRE
+
+1. Write script to monitor CPU/memory.
+2. Parse logs using Python.
+3. Automate Kubernetes tasks using Python.
+4. Read API response and alert failures.
+5. Script for auto-remediation.
+6. Parallel execution in Python.
+7. How would you monitor pods using Python?
+8. Build retry logic in API calls.
+9. Explain exception handling strategy.
+10. Create health-check automation.
+
+---
+
+## Python Advanced (VP / Lead Level)
+
+1. Asyncio vs multithreading.
+2. FastAPI vs Flask.
+3. Design scalable automation framework.
+4. Build centralized monitoring utility.
+5. Explain Python memory management.
+6. Profiling Python applications.
+7. Explain concurrency bottlenecks.
+8. Design log aggregation parser.
+9. Secure secrets in Python apps.
+10. Design Python microservice architecture.
+
+---
+
+# 🔥 SECTION 5 — Terraform / Cloud
+
+## Terraform
+
+1. Terraform state management.
+2. Remote backend design.
+3. Drift detection.
+4. Terraform modules best practices.
+5. count vs for_each.
+6. How do you handle secrets?
+7. Terraform workspaces.
+8. Multi-region infra deployment.
+9. Handling failed applies.
+10. Zero-downtime infra changes.
+
+---
+
+## AWS / Cloud
+
+1. Design highly available architecture.
+2. Explain VPC flow.
+3. Security Groups vs NACL.
+4. EKS networking flow.
+5. Route53 routing policies.
+6. API Gateway throttling.
+7. CloudWatch observability.
+8. S3 consistency model.
+9. Multi-region failover strategy.
+10. Disaster recovery planning.
+
+---
+
+# 🔥 SECTION 6 — Barclays-Style System Design
+
+## Common VP / Lead Questions
+
+1. Design Kubernetes platform for 10,000 developers.
+2. Design centralized observability platform.
+3. Design CI/CD for 500 microservices.
+4. Design multi-region HA platform.
+5. Design secure secrets management system.
+6. Design self-healing platform.
+7. Design platform for zero downtime.
+8. Design GitOps platform architecture.
+9. Design API rate-limiting system.
+10. Design enterprise Kubernetes governance model.
+
+---
+
+# 🎯 MOST IMPORTANT TOPICS FOR YOU
+
+Given your profile, Barclays will likely heavily focus on:
+
+* Kubernetes internals
+* OpenShift
+* Production troubleshooting
+* SRE concepts
+* Python automation
+* Incident handling
+* Leadership scenarios
+* Platform engineering concepts
+* GitOps
+* System design
+
+Your profile is already strong technically.
+The main differentiator for VP/Lead-level Barclays interviews is:
+
+* structured troubleshooting
+* large-scale architecture thinking
+* leadership maturity
+* automation depth
+* reliability mindset
+
+
+1. GitOps Deep-Dive (Important)
+
+Daily reports repeatedly mention:
+
+ArgoCD
+GitOps workflows
+Platform standardization
+Add These Questions
+Explain complete GitOps workflow.
+ArgoCD architecture internals.
+How does reconciliation work?
+Drift detection handling.
+Multi-cluster GitOps strategy.
+Secrets handling in GitOps.
+Rollback strategy in ArgoCD.
+Sync waves and hooks.
+GitOps vs traditional CI/CD.
+Troubleshooting failed syncs.
+
+
+🔥 2. Observability (Repeated Many Times)
+
+Daily reports strongly emphasized:
+
+Prometheus
+Grafana
+Splunk
+Alerting
+Observability maturity
+Missing Questions
+Difference between logs, metrics, traces.
+Explain RED vs USE metrics.
+Prometheus architecture.
+How does Prometheus scraping work?
+Grafana alert design.
+Centralized logging architecture.
+Distributed tracing concepts.
+OpenTelemetry basics.
+How do you identify noisy alerts?
+Design enterprise observability platform.
+
+
+🔥 3. CI/CD Advanced Topics
+
+Repeated across almost every report.
+
+Add These
+Jenkins master-agent architecture.
+GitHub Actions workflow design.
+How do you secure CI/CD pipelines?
+Secret scanning in pipelines.
+Progressive delivery strategy.
+Canary deployment automation.
+Blue-green rollback scenarios.
+CI/CD bottleneck troubleshooting.
+Artifact repository strategy.
+Multi-environment pipeline design.
+
+
+🔥 4. Service Mesh / Istio
+
+Mentioned increasingly in modern platform roles.
+
+Add Questions
+What is service mesh?
+Istio architecture.
+Envoy proxy role.
+Mutual TLS flow.
+Traffic shifting in Istio.
+Circuit breaking.
+Retry and timeout policies.
+Sidecar injection process.
+Service mesh observability.
+When NOT to use service mesh.
+🔥 5. Security / Compliance (Very Important for Barclays)
+
+Strongly implied in banking roles.
+
+Add Questions
+Kubernetes security best practices.
+Pod Security Standards.
+Secret encryption strategy.
+IAM integration with Kubernetes.
+Runtime container security.
+Image vulnerability scanning.
+RBAC design for enterprises.
+Multi-tenant security model.
+API server hardening.
+Audit logging strategy.
+
+                             
+🔥 6. Platform Engineering Maturity
+
+This was implied repeatedly.
+
+Add Questions
+What problems does Platform Engineering solve?
+Platform as a Product meaning?
+Developer Experience (DevEx) metrics.
+Golden path concept.
+Self-service platform design.
+Platform governance model.
+Internal platform adoption strategy.
+Platform scalability challenges.
+Cost optimization in platforms.
+Measuring platform success KPIs.
+
+                             
+🔥 7. Enterprise Networking (Important)
+
+Very likely for Barclays.
+
+Add Questions
+Explain DNS resolution flow.
+TCP 3-way handshake.
+TLS handshake flow.
+Load balancer internals.
+Reverse proxy vs ingress.
+NAT flow in Kubernetes.
+Packet capture troubleshooting.
+MTU mismatch issue.
+Explain kube-proxy iptables rules.
+Network latency troubleshooting.
+
+                             
+🔥 8. Linux Deep Troubleshooting
+
+Strongly relevant for SRE.
+
+Add Questions
+High CPU debugging.
+Memory leak analysis.
+Disk IO bottlenecks.
+Zombie processes.
+File descriptor exhaustion.
+OOM killer internals.
+top vs htop vs vmstat vs iostat.
+strace usage.
+Network troubleshooting tools.
+Systemd troubleshooting.
