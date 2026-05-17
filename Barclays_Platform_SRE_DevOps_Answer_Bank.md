@@ -46,24 +46,54 @@ AKS integrates with VMSS, Azure CNI, and Entra ID.
 
 ---
 
-## What happens internally when a pod is created?
+## Advanced Production Troubleshooting
 
-1. Request reaches API server
-2. Authentication & RBAC checks happen
-3. Admission controllers validate request
-4. Object stored in etcd
-5. Scheduler assigns node
-6. kubelet receives assignment
-7. Images pulled
-8. CNI creates network
-9. Pod starts running
+### Pods stuck in Pending
 
-Common Scenario:
-Pod stuck in Pending:
-- insufficient CPU/memory
+Common causes:
+- insufficient resources
 - taints/tolerations mismatch
-- PVC issue
-- node selector mismatch
+- PVC binding failure
+- topology spread constraints
+- IP exhaustion
+
+Debug commands:
+```bash
+kubectl describe pod <pod>
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl top nodes
+```
+
+AWS-specific issue:
+EKS clusters often hit ENI/IP exhaustion.
+
+Azure-specific issue:
+AKS with Azure CNI may run out of subnet IPs.
+
+---
+
+### Node becomes NotReady
+
+Root causes:
+- kubelet failure
+- memory pressure
+- disk pressure
+- network partition
+- certificate expiry
+
+Recovery steps:
+1. cordon node
+2. drain workloads
+3. inspect kubelet logs
+4. recover node
+5. rejoin cluster
+
+Commands:
+```bash
+kubectl describe node <node>
+systemctl status kubelet
+journalctl -u kubelet
+```
 
 ---
 
@@ -80,65 +110,11 @@ Important Components:
 - CNI
 - iptables/IPVS
 
-Troubleshooting:
-- verify endpoints
-- check ingress rules
-- validate DNS
-- inspect Network Policies
-
 AWS Example:
 ALB Ingress Controller routes traffic to EKS services.
 
 Azure Example:
 Application Gateway Ingress Controller routes traffic to AKS.
-
----
-
-# OpenShift
-
-## Difference between OpenShift and Kubernetes
-
-OpenShift is an enterprise Kubernetes platform with:
-- built-in registry
-- OAuth integration
-- SCC security model
-- Operator Lifecycle Manager
-- integrated CI/CD
-- enterprise support
-
-Kubernetes is the upstream orchestration platform.
-
----
-
-## What are SCCs?
-
-Security Context Constraints control:
-- privileged access
-- UID ranges
-- capabilities
-- host mounts
-
-They provide stronger multi-tenant isolation.
-
----
-
-# GitOps
-
-## Explain GitOps workflow
-
-1. Developer commits change
-2. Git becomes source of truth
-3. ArgoCD/Flux detects drift
-4. Cluster reconciles automatically
-
-Benefits:
-- auditability
-- rollback
-- consistency
-- reduced manual changes
-
-Scenario:
-Manual kubectl change gets reverted automatically by reconciliation.
 
 ---
 
@@ -160,34 +136,94 @@ Capabilities:
 Production Example:
 Canary deployment using VirtualService with 90/10 traffic split.
 
+### mTLS Troubleshooting
+
+Common issue:
+Services stop communicating after enabling strict mTLS.
+
+Debug steps:
+```bash
+istioctl proxy-status
+istioctl analyze
+kubectl logs <envoy-sidecar>
+```
+
+Top interview follow-ups:
+- permissive vs strict mTLS
+- when not to use Istio
+- sidecar injection internals
+
 ---
 
-# SRE
+# OpenShift
 
-## What are SLI/SLO/SLA?
+## Difference between OpenShift and Kubernetes
 
-SLI:
-Measured metric (availability, latency)
-
-SLO:
-Target objective
-Example: 99.9% availability
-
-SLA:
-Business/legal agreement
+OpenShift is an enterprise Kubernetes platform with:
+- built-in registry
+- OAuth integration
+- SCC security model
+- Operator Lifecycle Manager
+- integrated CI/CD
+- enterprise support
 
 ---
 
-## Explain error budget
+## OpenShift Upgrade Strategy
 
-Error budget defines acceptable unreliability.
+Enterprise flow:
+1. upgrade non-prod first
+2. validate operators
+3. verify SCC/policies
+4. monitor MachineConfigPools
+5. validate ingress/storage
 
-Example:
-99.9% uptime allows ~43 minutes downtime/month.
+Commands:
+```bash
+oc get clusterversion
+oc get mcp
+oc adm upgrade
+```
 
-If error budget exhausted:
-- stop feature releases
-- focus on reliability improvements
+Common failure scenarios:
+- incompatible operators
+- pending MCP updates
+- CRD mismatch
+- certificate expiry
+
+---
+
+# GitOps
+
+## Explain GitOps workflow
+
+1. Developer commits change
+2. Git becomes source of truth
+3. ArgoCD/Flux detects drift
+4. Cluster reconciles automatically
+
+Benefits:
+- auditability
+- rollback
+- consistency
+- reduced manual changes
+
+### ArgoCD Internals
+
+Components:
+- API server
+- repo server
+- application controller
+- Redis cache
+
+Scenario:
+Manual kubectl changes are automatically reverted after reconciliation.
+
+Commands:
+```bash
+argocd app sync
+argocd app diff
+```
 
 ---
 
@@ -201,12 +237,18 @@ Known metrics and alerts.
 Observability:
 Ability to understand unknown failures using logs, metrics, and traces.
 
-Stack Example:
+Enterprise Stack:
 - Prometheus
 - Grafana
 - Loki
-- Jaeger
+- Tempo/Jaeger
 - OpenTelemetry
+
+Common production issues:
+- alert storms
+- high-cardinality metrics
+- expensive logging
+- trace sampling gaps
 
 ---
 
@@ -216,16 +258,24 @@ Stack Example:
 
 Terraform state tracks infrastructure resources.
 
-Best Practice:
-- remote backend
-- state locking
-- versioning enabled
+AWS Best Practice:
+- S3 backend
+- DynamoDB locking
+- KMS encryption
 
-AWS:
-S3 + DynamoDB locking
+Azure Best Practice:
+- Azure Blob backend
+- Key Vault integration
+- RBAC-controlled access
 
-Azure:
-Azure Blob backend + storage locking
+### Failure Scenario
+Terraform apply partially fails.
+
+Recovery:
+- inspect state
+- import missing resources
+- avoid manual drift
+- taint/recreate selectively
 
 ---
 
@@ -240,8 +290,16 @@ Common tasks:
 - API polling
 - metrics collection
 
-Example:
-Python script checks pod failures and restarts unhealthy workloads automatically.
+### Auto-remediation Example
+If pod restart count exceeds threshold:
+1. gather diagnostics
+2. capture logs
+3. restart workload
+4. notify Slack/Teams
+5. create incident ticket
+
+Important point:
+Automation must be idempotent and observable.
 
 ---
 
@@ -258,8 +316,8 @@ Approach:
 6. Conduct RCA
 7. Prevent recurrence
 
-Key leadership trait:
-Stay calm and structured.
+Leadership expectation:
+Remain calm and structured under pressure.
 
 ---
 
@@ -282,21 +340,33 @@ Key Concepts:
 
 ## Design Kubernetes platform for 10,000 developers
 
-Key Requirements:
+Requirements:
 - multi-cluster architecture
-- strong RBAC
-- GitOps
 - centralized observability
+- GitOps
 - self-service platform
+- RBAC isolation
 - quota management
-- network isolation
+- network policies
 
-Suggested Design:
-- OpenShift/EKS/AKS multi-cluster
-- ArgoCD for GitOps
-- Istio for service mesh
+Suggested Stack:
+- OpenShift/EKS/AKS
+- ArgoCD
+- Istio
 - Prometheus + Loki + Tempo
-- Backstage developer portal
+- Backstage
+- Crossplane
+
+Scaling challenges:
+- API server scalability
+- etcd growth
+- observability cost
+- CI/CD bottlenecks
+
+Top interview follow-ups:
+- noisy tenant isolation
+- disaster recovery design
+- cost optimization strategy
 
 ---
 
@@ -311,9 +381,11 @@ Always answer in this order:
 4. Explain AWS/Azure/OpenShift implementation
 5. Explain trade-offs
 
-The differentiator at Lead/VP level is:
-- troubleshooting depth
-- architecture thinking
-- reliability mindset
-- automation maturity
-- leadership clarity
+Top candidates explain:
+- production failures
+- operational recovery
+- scalability bottlenecks
+- cloud implementation patterns
+- architecture trade-offs
+
+That is what differentiates Principal / VP Platform Engineers from standard DevOps engineers.
